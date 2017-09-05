@@ -34,7 +34,7 @@ public final class InvContract {
      * looking at inventory data. content://com.example.ifgan.inventoryapp/staff/ will fail,
      * as the ContentProvider hasn't been given any information on what to do with "staff".
      */
-    public static final String PATH_INVENTORY = "inventory";
+    public static final String PATH_INVENTORY = "inventoryapp";
 
     /**
      * Inner class that defines constant values for the inventory database table.

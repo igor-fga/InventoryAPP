@@ -1,12 +1,16 @@
 package com.example.ifgan.inventoryapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+
+import com.example.ifgan.inventoryapp.data.InvContract;
+import com.example.ifgan.inventoryapp.data.InvContract.InvEntry;
 
 /**
  * Created by ifgan on 04/09/2017.
@@ -57,5 +61,22 @@ public class InvCursorAdapter extends CursorAdapter {
         TextView amountTextView = (TextView) view.findViewById(R.id.amount);
         TextView priceTextView = (TextView) view.findViewById(R.id.price);
         TextView soldTextView = (TextView) view.findViewById(R.id.sold);
+
+        // Find the columns of pet attributes that we're interested in
+        int nameColumnIndex = cursor.getColumnIndex(InvEntry.COLUMN_PRODUCT_NAME);
+        int amountColumnIndex = cursor.getColumnIndex(InvEntry.COLUMN_PRODUCT_AMOUNT);
+        int priceColumnIndex = cursor.getColumnIndex(InvEntry.COLUMN_PRODUCT_PRICE);
+        int soldColumnIndex = cursor.getColumnIndex(InvEntry.COLUMN_PRODUCT_SOLD);
+
+        // Read the pet attributes from the Cursor for the current pet
+        String prodName = cursor.getString(nameColumnIndex);
+        int amount = cursor.getInt(amountColumnIndex);
+        int price = cursor.getInt(priceColumnIndex);
+        int sold = cursor.getInt(soldColumnIndex);
+
+        nameTextView.setText(prodName);
+        amountTextView.setText(Integer.toString(amount));
+        priceTextView.setText(Integer.toString(price));
+        soldTextView.setText(Integer.toString(sold));
     }
 }

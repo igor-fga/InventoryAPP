@@ -325,7 +325,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mNameEditText.setText("");
         mAmountEditText.setText("");
         mPriceEditText.setText("");
-        mSoldEditText.setText(0); // Select "Unknown" gender
+        mSoldEditText.setText("");
     }
 
     /**

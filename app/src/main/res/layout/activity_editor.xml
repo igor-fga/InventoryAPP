@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,47 +15,102 @@
 
         <!-- Label -->
         <TextView
-            android:text="@string/category_overview"
-            style="@style/CategoryStyle" />
+            style="@style/CategoryStyle"
+            android:text="@string/prod_name" />
 
         <!-- Input fields -->
         <LinearLayout
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:paddingLeft="4dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="4dp">
 
             <!-- Name field -->
             <EditText
                 android:id="@+id/edit_prod_name"
-                android:hint="@string/hint_prod_name"
-                android:inputType="textCapWords"
-                style="@style/EditorFieldStyle" />
+                style="@style/EditorFieldStyle"
+                android:inputType="textCapWords" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Label -->
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="@string/prod_amount" />
+
+        <!-- Input fields -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:paddingLeft="4dp">
 
             <!-- Amount field -->
             <EditText
                 android:id="@+id/edit_prod_amount"
-                android:hint="@string/hint_prod_amount"
-                android:inputType="textCapWords"
-                style="@style/EditorFieldStyle" />
+                style="@style/EditorFieldStyle"
+                android:inputType="number" />
+        </LinearLayout>
+    </LinearLayout>
 
-            <!-- Amount field -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Label -->
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="@string/prod_price" />
+
+        <!-- Input fields -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:paddingLeft="4dp">
+
+            <!-- Price field -->
             <EditText
                 android:id="@+id/edit_prod_price"
-                android:hint="@string/hint_prod_price"
-                android:inputType="number"
-                style="@style/EditorFieldStyle" />
+                style="@style/EditorFieldStyle"
+                android:inputType="number" />
+        </LinearLayout>
+    </LinearLayout>
 
-            <!-- Sold field -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Label -->
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="@string/prod_sold" />
+
+        <!-- Input fields -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:paddingLeft="4dp">
+
+            <!-- Price field -->
             <EditText
                 android:id="@+id/edit_prod_sold"
-                android:hint="@string/hint_prod_sold"
-                android:inputType="number"
-                style="@style/EditorFieldStyle" />
-
+                style="@style/EditorFieldStyle"
+                android:inputType="number" />
         </LinearLayout>
-
     </LinearLayout>
 
 </LinearLayout>

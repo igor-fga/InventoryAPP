@@ -17,13 +17,13 @@
     <!-- Label for overview category of attributes in the editor [CHAR LIMIT=30] -->
     <string name="category_overview">Overview</string>
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_prod_name">Name</string>
+    <string name="prod_name">Name</string>
     <!-- Text hint for amount field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_prod_amount">Amount</string>
+    <string name="prod_amount">Amount:</string>
     <!-- Text hint for price field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_prod_price">Price</string>
+    <string name="prod_price">Price:</string>
     <!-- Text hint for sold field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_prod_sold">Sold</string>
+    <string name="prod_sold">Sold:</string>
     <!-- Toast message in editor when new pet has failed to be inserted [CHAR LIMIT=NONE] -->
     <string name="editor_insert_prod_failed">Error with saving pet</string>
     <!-- Toast message in editor when new pet has been successfully inserted [CHAR LIMIT=NONE] -->

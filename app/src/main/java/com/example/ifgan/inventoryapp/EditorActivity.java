@@ -452,13 +452,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         EditText editEmailProvider = (EditText) findViewById(R.id.edit_prod_provider_email);
         String emailString = editEmailProvider.getText().toString().trim();
 
+        EditText editNameText = (EditText) findViewById(R.id.edit_prod_name);
+
+
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
         emailIntent.setData(Uri.parse("mailto:"));
         emailIntent.setType("text/plain");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {emailString});
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Your subject");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Email message goes here");
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Buy more " + editNameText.getText().toString());
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "I want more " + editNameText.getText().toString());
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));

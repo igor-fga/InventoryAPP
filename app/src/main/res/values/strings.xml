@@ -10,6 +10,7 @@
     <string name="action_save">Save</string>
     <!-- Label for editor overflow menu option that deletes the current product [CHAR LIMIT=20] -->
     <string name="action_delete">Delete</string>
+    <string name="action_buyMore">Buy more</string>
     <!-- Title for the activity to add a new product [CHAR LIMIT=20] -->
     <string name="editor_activity_title_new_prod">Add a Product</string>
     <!-- Title for the activity to edit an existing product [CHAR LIMIT=20] -->

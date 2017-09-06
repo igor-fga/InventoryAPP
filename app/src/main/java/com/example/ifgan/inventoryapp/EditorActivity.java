@@ -13,6 +13,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -206,7 +207,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // If this is a new pet, hide the "Delete" menu item.
         if (mCurrentInvUri == null) {
             MenuItem menuItem = menu.findItem(R.id.action_delete);
+            MenuItem menuItemBuy = menu.findItem(R.id.action_buy);
             menuItem.setVisible(false);
+            menuItemBuy.setVisible(false);
         }
         return true;
     }
@@ -226,6 +229,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             case R.id.action_delete:
                 // Pop up confirmation dialog for deletion
                 showDeleteConfirmationDialog();
+                return true;
+            case R.id.action_buy:
+                sendEmail();
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
@@ -437,4 +443,31 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Close the activity
         finish();
     }
+
+    /**
+     * Sendemail to provider
+     */
+    private void sendEmail() {
+
+        EditText editEmailProvider = (EditText) findViewById(R.id.edit_prod_provider_email);
+        String emailString = editEmailProvider.getText().toString().trim();
+
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("text/plain");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {emailString});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Your subject");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Email message goes here");
+
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+            finish();
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(EditorActivity.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
 }

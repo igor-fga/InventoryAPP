@@ -57,5 +57,6 @@
     <string name="edit_provider_mail">Provider E-mail</string>
     <string name="dialogsellmessage">How many do you want to sell?</string>
     <string name="dialogsellmessage2">Enter value below</string>
+    <string name="enough">Not enought amount to sell</string>
 
 </resources>

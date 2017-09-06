@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -440,7 +441,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 mSoldEditText = (EditText) findViewById(R.id.edit_prod_sold);
-                mSoldEditText.setText(edt.getText().toString());
+                int amount = Integer.parseInt(mAmountEditText.getText().toString());
+                int sold =  Integer.parseInt(edt.getText().toString());
+
+                if (sold > amount)
+                {
+                    Toast.makeText(EditorActivity.this, getString(R.string.enough), Toast.LENGTH_SHORT).show();
+                }else{
+
+                    mSoldEditText.setText(edt.getText().toString());
+                }
             }
         });
         dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

@@ -11,6 +11,7 @@
     <!-- Label for editor overflow menu option that deletes the current product [CHAR LIMIT=20] -->
     <string name="action_delete">Delete</string>
     <string name="action_buyMore">Buy more</string>
+    <string name="action_sell">Sell</string>
     <!-- Title for the activity to add a new product [CHAR LIMIT=20] -->
     <string name="editor_activity_title_new_prod">Add a Product</string>
     <!-- Title for the activity to edit an existing product [CHAR LIMIT=20] -->
@@ -54,5 +55,7 @@
     <string name="edit_sold">Sold</string>
     <string name="edit_provider">Provider</string>
     <string name="edit_provider_mail">Provider E-mail</string>
+    <string name="dialogsellmessage">How many do you want to sell?</string>
+    <string name="dialogsellmessage2">Enter value below</string>
 
 </resources>

@@ -21,4 +21,9 @@
         android:title="@string/action_buyMore"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_sell"
+        android:title="@string/action_sell"
+        app:showAsAction="never" />
+
 </menu>

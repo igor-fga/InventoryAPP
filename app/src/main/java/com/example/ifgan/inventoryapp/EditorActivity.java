@@ -14,11 +14,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.ifgan.inventoryapp.data.InvContract.InvEntry;
@@ -87,6 +89,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         } else {
             // Otherwise this is an existing pet, so change app bar to say "Edit Product"
             setTitle(getString(R.string.editor_activity_title_edit_prod));
+            mSoldEditText = (EditText) findViewById(R.id.edit_prod_sold);
+            mSoldEditText.setEnabled(false);
+
 
             // Initialize a loader to read the pet data from the database
             // and display the current values in the editor
@@ -208,8 +213,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (mCurrentInvUri == null) {
             MenuItem menuItem = menu.findItem(R.id.action_delete);
             MenuItem menuItemBuy = menu.findItem(R.id.action_buy);
+            MenuItem menuItemSell = menu.findItem(R.id.action_sell);
             menuItem.setVisible(false);
             menuItemBuy.setVisible(false);
+            menuItemSell.setVisible(false);
         }
         return true;
     }
@@ -232,6 +239,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 return true;
             case R.id.action_buy:
                 sendEmail();
+                return true;
+            case R.id.action_sell:
+                showSellConfirmationDialog();
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
@@ -415,6 +425,35 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    private void showSellConfirmationDialog(){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        final EditText edt = (EditText) dialogView.findViewById(R.id.edit1);
+
+        dialogBuilder.setTitle(getString(R.string.dialogsellmessage));
+        dialogBuilder.setMessage(getString(R.string.dialogsellmessage2));
+        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                mSoldEditText = (EditText) findViewById(R.id.edit_prod_sold);
+                mSoldEditText.setText(edt.getText().toString());
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // User clicked the "Cancel" button, so dismiss the dialog
+                // and continue editing the pet.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
     }
 
     /**

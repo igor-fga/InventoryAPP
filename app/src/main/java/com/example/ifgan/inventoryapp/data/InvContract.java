@@ -95,5 +95,21 @@ public final class InvContract {
          * Type: INTEGER
          */
         public final static String COLUMN_PRODUCT_SOLD = "sold";
+
+        /**
+         * Name of the provider.
+         *
+         * Type: TEXT
+         */
+        public final static String COLUMN_PRODUCT_PROVIDER ="provider";
+
+        /**
+         * E-mail of the provider.
+         *
+         * Type: TEXT
+         */
+        public final static String COLUMN_PRODUCT_PROVIDER_EMAIL ="email";
+
+
     }
 }

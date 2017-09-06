@@ -62,6 +62,7 @@ public class InvCursorAdapter extends CursorAdapter {
         TextView priceTextView = (TextView) view.findViewById(R.id.price);
         TextView soldTextView = (TextView) view.findViewById(R.id.sold);
 
+
         // Find the columns of pet attributes that we're interested in
         int nameColumnIndex = cursor.getColumnIndex(InvEntry.COLUMN_PRODUCT_NAME);
         int amountColumnIndex = cursor.getColumnIndex(InvEntry.COLUMN_PRODUCT_AMOUNT);

@@ -42,6 +42,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     /** EditText field to enter the product's sold */
     private EditText mSoldEditText;
 
+    /** EditText field to enter the product's provider */
+    private EditText mProviderEditText;
+
+    /** EditText field to enter the product's provider e-mail */
+    private EditText mProviderEmailEditText;
+
     /** Boolean flag that keeps track of whether the prod has been edited (true) or not (false) */
     private boolean mProdHasChanged = false;
 
@@ -91,6 +97,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mAmountEditText = (EditText) findViewById(R.id.edit_prod_amount);
         mPriceEditText = (EditText) findViewById(R.id.edit_prod_price);
         mSoldEditText = (EditText) findViewById(R.id.edit_prod_sold);
+        mProviderEditText = (EditText) findViewById(R.id.edit_prod_provider);
+        mProviderEmailEditText = (EditText) findViewById(R.id.edit_prod_provider_email);
 
         // Setup OnTouchListeners on all the input fields, so we can determine if the user
         // has touched or modified them. This will let us know if there are unsaved changes
@@ -99,6 +107,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mAmountEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
         mSoldEditText.setOnTouchListener(mTouchListener);
+        mProviderEditText.setOnTouchListener(mTouchListener);
+        mProviderEmailEditText.setOnTouchListener(mTouchListener);
     }
 
     /**
@@ -111,12 +121,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String amountString = mAmountEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
         String soldString = mSoldEditText.getText().toString().trim();
+        String providerString = mProviderEditText.getText().toString().trim();
+        String providerEmailString = mProviderEmailEditText.getText().toString().trim();
 
         // Check if this is supposed to be a new pet
         // and check if all the fields in the editor are blank
         if (mCurrentInvUri == null &&
                 TextUtils.isEmpty(nameString) && TextUtils.isEmpty(amountString) &&
-                TextUtils.isEmpty(priceString) && TextUtils.isEmpty(soldString)) {
+                TextUtils.isEmpty(priceString) && TextUtils.isEmpty(soldString) &&
+                TextUtils.isEmpty(providerString) && TextUtils.isEmpty(providerEmailString)) {
             // Since no fields were modified, we can return early without creating a new pet.
             // No need to create ContentValues and no need to do any ContentProvider operations.
             return;
@@ -128,6 +141,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(InvEntry.COLUMN_PRODUCT_NAME, nameString);
         values.put(InvEntry.COLUMN_PRODUCT_AMOUNT, amountString);
         values.put(InvEntry.COLUMN_PRODUCT_PRICE, priceString);
+        values.put(InvEntry.COLUMN_PRODUCT_PROVIDER, providerString);
+        values.put(InvEntry.COLUMN_PRODUCT_PROVIDER_EMAIL, providerEmailString);
 
         // If the weight is not provided by the user, don't try to parse the string into an
         // integer value. Use 0 by default.
@@ -278,7 +293,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 InvEntry.COLUMN_PRODUCT_NAME,
                 InvEntry.COLUMN_PRODUCT_AMOUNT,
                 InvEntry.COLUMN_PRODUCT_PRICE,
-                InvEntry.COLUMN_PRODUCT_SOLD };
+                InvEntry.COLUMN_PRODUCT_SOLD,
+                InvEntry.COLUMN_PRODUCT_PROVIDER,
+                InvEntry.COLUMN_PRODUCT_PROVIDER_EMAIL};
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context
@@ -304,18 +321,24 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int amountColumnIndex = cursor.getColumnIndex(InvEntry.COLUMN_PRODUCT_AMOUNT);
             int priceColumnIndex = cursor.getColumnIndex(InvEntry.COLUMN_PRODUCT_PRICE);
             int soldColumnIndex = cursor.getColumnIndex(InvEntry.COLUMN_PRODUCT_SOLD);
+            int providerColumnIndex = cursor.getColumnIndex(InvEntry.COLUMN_PRODUCT_PROVIDER);
+            int providerEmailColumnIndex = cursor.getColumnIndex(InvEntry.COLUMN_PRODUCT_PROVIDER_EMAIL);
 
             // Extract out the value from the Cursor for the given column index
             String name = cursor.getString(nameColumnIndex);
             int amount = cursor.getInt(amountColumnIndex);
             int price = cursor.getInt(priceColumnIndex);
             int sold = cursor.getInt(soldColumnIndex);
+            String provider = cursor.getString(providerColumnIndex);
+            String providerEmail = cursor.getString(providerEmailColumnIndex);
 
             // Update the views on the screen with the values from the database
             mNameEditText.setText(name);
             mAmountEditText.setText(Integer.toString(amount));
             mPriceEditText.setText(Integer.toString(price));
             mSoldEditText.setText(Integer.toString(sold));
+            mProviderEditText.setText(provider);
+            mProviderEmailEditText.setText(providerEmail);
         }
     }
 
@@ -326,6 +349,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mAmountEditText.setText("");
         mPriceEditText.setText("");
         mSoldEditText.setText("");
+        mProviderEditText.setText("");
+        mProviderEmailEditText.setText("");
     }
 
     /**
@@ -400,11 +425,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Show a toast message depending on whether or not the delete was successful.
             if (rowsDeleted == 0) {
                 // If no rows were deleted, then there was an error with the delete.
-                Toast.makeText(this, getString(R.string.editor_delete_pet_failed),
+                Toast.makeText(this, getString(R.string.editor_delete_prod_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
                 // Otherwise, the delete was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.editor_delete_pet_successful),
+                Toast.makeText(this, getString(R.string.editor_delete_prod_successful),
                         Toast.LENGTH_SHORT).show();
             }
         }

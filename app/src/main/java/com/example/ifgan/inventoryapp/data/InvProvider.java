@@ -162,6 +162,18 @@ public class InvProvider extends ContentProvider {
             throw new IllegalArgumentException("Product requires a price");
         }
 
+        // Check that the provider is not null
+        String provider = values.getAsString(InvEntry.COLUMN_PRODUCT_PROVIDER);
+        if (provider == null) {
+            throw new IllegalArgumentException("Product requires a provider");
+        }
+
+        // Check that the provider is not null
+        String emailProvider = values.getAsString(InvEntry.COLUMN_PRODUCT_PROVIDER_EMAIL);
+        if (emailProvider == null) {
+            throw new IllegalArgumentException("Product requires a e-mail of the provider");
+        }
+
         // Get writeable database
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 

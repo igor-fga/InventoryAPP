@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         values.put(InvEntry.COLUMN_PRODUCT_AMOUNT, 3);
         values.put(InvEntry.COLUMN_PRODUCT_PRICE, 1000);
         values.put(InvEntry.COLUMN_PRODUCT_SOLD, 0);
+        values.put(InvEntry.COLUMN_PRODUCT_PROVIDER, "DELL");
+        values.put(InvEntry.COLUMN_PRODUCT_PROVIDER_EMAIL, "ifgandrade@gmail.com");
 
         // Insert a new row for Toto into the provider using the ContentResolver.
         // Use the {@link PetEntry#CONTENT_URI} to indicate that we want to insert
@@ -136,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
     @Override
-    public android.content.Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
 
         // Define a projection that specifies the columns from the table we care about.
         String[] projection = {
@@ -144,7 +146,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 InvEntry.COLUMN_PRODUCT_NAME,
                 InvEntry.COLUMN_PRODUCT_AMOUNT,
                 InvEntry.COLUMN_PRODUCT_PRICE,
-                InvEntry.COLUMN_PRODUCT_SOLD};
+                InvEntry.COLUMN_PRODUCT_SOLD,
+                InvEntry.COLUMN_PRODUCT_PROVIDER,
+                InvEntry.COLUMN_PRODUCT_PROVIDER_EMAIL};
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context

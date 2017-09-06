@@ -7,7 +7,7 @@
     android:padding="@dimen/activity_margin"
     tools:context=".EditorActivity">
 
-    <!-- Overview category -->
+    <!-- Name category -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,6 +35,8 @@
         </LinearLayout>
     </LinearLayout>
 
+
+    <!-- Amount category -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,7 +45,7 @@
         <!-- Label -->
         <TextView
             style="@style/CategoryStyle"
-            android:text="@string/prod_amount" />
+            android:text="@string/edit_amount" />
 
         <!-- Input fields -->
         <LinearLayout
@@ -61,6 +63,7 @@
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Price category -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -69,7 +72,7 @@
         <!-- Label -->
         <TextView
             style="@style/CategoryStyle"
-            android:text="@string/prod_price" />
+            android:text="@string/edit_price" />
 
         <!-- Input fields -->
         <LinearLayout
@@ -87,6 +90,8 @@
         </LinearLayout>
     </LinearLayout>
 
+
+    <!-- Sold category -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -95,7 +100,7 @@
         <!-- Label -->
         <TextView
             style="@style/CategoryStyle"
-            android:text="@string/prod_sold" />
+            android:text="@string/edit_sold" />
 
         <!-- Input fields -->
         <LinearLayout
@@ -112,5 +117,63 @@
                 android:inputType="number" />
         </LinearLayout>
     </LinearLayout>
+
+    <!-- Provider category -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Label -->
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="@string/edit_provider" />
+
+        <!-- Input fields -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:paddingLeft="4dp">
+
+            <!-- Provider field -->
+            <EditText
+                android:id="@+id/edit_prod_provider"
+                style="@style/EditorFieldStyle"
+                android:inputType="textCapWords" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Provider e-mail category -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Label -->
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="@string/edit_provider_mail" />
+
+        <!-- Input fields -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:paddingLeft="4dp">
+
+            <!-- Provider email field -->
+            <EditText
+                android:id="@+id/edit_prod_provider_email"
+                style="@style/EditorFieldStyle"
+                android:inputType="textEmailAddress" />
+        </LinearLayout>
+    </LinearLayout>
+
+
 
 </LinearLayout>

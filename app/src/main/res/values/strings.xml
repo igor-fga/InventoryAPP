@@ -58,5 +58,6 @@
     <string name="dialogsellmessage">How many do you want to sell?</string>
     <string name="dialogsellmessage2">Enter value below</string>
     <string name="enough">Not enought amount to sell</string>
+    <string name="empty">Not accept empty fields</string>
 
 </resources>

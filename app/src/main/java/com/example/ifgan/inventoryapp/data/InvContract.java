@@ -110,6 +110,13 @@ public final class InvContract {
          */
         public final static String COLUMN_PRODUCT_PROVIDER_EMAIL ="email";
 
+        /**
+         * Image of the product.
+         *
+         * Type: BLOB
+         */
+        public final static String COLUMN_PRODUCT_IMAGE ="image";
+
 
     }
 }

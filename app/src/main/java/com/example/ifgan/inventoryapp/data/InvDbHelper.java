@@ -44,7 +44,8 @@ public class InvDbHelper extends SQLiteOpenHelper {
                 + InvEntry.COLUMN_PRODUCT_PRICE + " INTEGER NOT NULL DEFAULT 0, "
                 + InvEntry.COLUMN_PRODUCT_SOLD + " INTEGER NOT NULL DEFAULT 0, "
                 + InvEntry.COLUMN_PRODUCT_PROVIDER + " TEXT NOT NULL, "
-                + InvEntry.COLUMN_PRODUCT_PROVIDER_EMAIL + " TEXT NOT NULL );";
+                + InvEntry.COLUMN_PRODUCT_PROVIDER_EMAIL + " TEXT NOT NULL, "
+                + InvEntry.COLUMN_PRODUCT_IMAGE + " BLOB );";
 
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_INVENTORY_TABLE);

@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -21,15 +23,21 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.ifgan.inventoryapp.data.InvContract.InvEntry;
 
+import java.io.ByteArrayOutputStream;
+
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     /** Identifier for the product data loader */
     private static final int EXISTING_INV_LOADER = 0;
+    private static final int SELECT_PICTURE = 100;
+
+    ImageView imgView;
 
     /** Content URI for the existing product (null if it's a new product) */
     private Uri mCurrentInvUri;
@@ -99,6 +107,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             getLoaderManager().initLoader(EXISTING_INV_LOADER, null, this);
         }
 
+        imgView = (ImageView)  findViewById(R.id.imgView);
+
         // Find all relevant views that we will need to read user input from
         mNameEditText = (EditText) findViewById(R.id.edit_prod_name);
         mAmountEditText = (EditText) findViewById(R.id.edit_prod_amount);
@@ -116,6 +126,26 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSoldEditText.setOnTouchListener(mTouchListener);
         mProviderEditText.setOnTouchListener(mTouchListener);
         mProviderEmailEditText.setOnTouchListener(mTouchListener);
+    }
+
+    public void openImageChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+
+                Uri selectedImageUri = data.getData();
+
+                if (null != selectedImageUri) {
+                    imgView.setImageURI(selectedImageUri);
+                }
+            }
+        }
     }
 
     /**
@@ -137,8 +167,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 TextUtils.isEmpty(nameString) && TextUtils.isEmpty(amountString) &&
                 TextUtils.isEmpty(priceString) && TextUtils.isEmpty(soldString) &&
                 TextUtils.isEmpty(providerString) && TextUtils.isEmpty(providerEmailString)) {
-            // Since no fields were modified, we can return early without creating a new pet.
+            // Since no fields were modified, we can return early without creating a new prod.
             // No need to create ContentValues and no need to do any ContentProvider operations.
+            Toast.makeText(this, getString(R.string.empty),
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -158,6 +190,17 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             sold = Integer.parseInt(soldString);
         }
         values.put(InvEntry.COLUMN_PRODUCT_SOLD, sold);
+
+        imgView.setDrawingCacheEnabled(true);
+
+        Bitmap bmap = imgView.getDrawingCache();
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+        byte[] img = bos.toByteArray();
+
+        values.put(InvEntry.COLUMN_PRODUCT_IMAGE, img);
+
+
 
         // Determine if this is a new or existing pet by checking if mCurrentPetUri is null or not
         if (mCurrentInvUri == null) {
@@ -244,6 +287,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             case R.id.action_sell:
                 showSellConfirmationDialog();
                 return true;
+            case R.id.action_photo:
+                openImageChooser();
+                return true;
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
                 // If the pet hasn't changed, continue with navigating up to parent activity
@@ -271,6 +317,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     /**
      * This method is called when the back button is pressed.
@@ -312,7 +359,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 InvEntry.COLUMN_PRODUCT_PRICE,
                 InvEntry.COLUMN_PRODUCT_SOLD,
                 InvEntry.COLUMN_PRODUCT_PROVIDER,
-                InvEntry.COLUMN_PRODUCT_PROVIDER_EMAIL};
+                InvEntry.COLUMN_PRODUCT_PROVIDER_EMAIL,
+                InvEntry.COLUMN_PRODUCT_IMAGE};
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context
@@ -340,6 +388,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int soldColumnIndex = cursor.getColumnIndex(InvEntry.COLUMN_PRODUCT_SOLD);
             int providerColumnIndex = cursor.getColumnIndex(InvEntry.COLUMN_PRODUCT_PROVIDER);
             int providerEmailColumnIndex = cursor.getColumnIndex(InvEntry.COLUMN_PRODUCT_PROVIDER_EMAIL);
+            int imageColumnIndex = cursor.getColumnIndex(InvEntry.COLUMN_PRODUCT_IMAGE);
 
             // Extract out the value from the Cursor for the given column index
             String name = cursor.getString(nameColumnIndex);
@@ -348,6 +397,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int sold = cursor.getInt(soldColumnIndex);
             String provider = cursor.getString(providerColumnIndex);
             String providerEmail = cursor.getString(providerEmailColumnIndex);
+            byte[] image = cursor.getBlob(imageColumnIndex);
+
+            Bitmap b = BitmapFactory.decodeByteArray(image, 0, image.length);
+            imgView.setImageBitmap(b);
 
             // Update the views on the screen with the values from the database
             mNameEditText.setText(name);

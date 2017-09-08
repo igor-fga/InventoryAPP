@@ -2,11 +2,10 @@ package com.example.ifgan.inventoryapp;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.app.LoaderManager;
 import android.content.Loader;
@@ -14,23 +13,29 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import com.example.ifgan.inventoryapp.data.InvContract.InvEntry;
+import com.example.ifgan.inventoryapp.data.InventoryContract;
+import com.example.ifgan.inventoryapp.data.InventoryContract.InvEntry;
+import com.example.ifgan.inventoryapp.data.InventoryProvider;
 
-import java.io.ByteArrayOutputStream;
+import static java.security.AccessController.getContext;
 
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    /** Identifier for the pet data loader */
+    /**
+     * Identifier for the prod data loader
+     */
     private static final int INV_LOADER = 0;
 
-    /** Adapter for the ListView */
+    /**
+     * Adapter for the ListView
+     */
     InvCursorAdapter mCursorAdapter;
 
     @Override
@@ -57,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         invListView.setEmptyView(emptyView);
 
         // Setup an Adapter to create a list item for each row of inventory data in the Cursor.
-        // There is no product data yet (until the loader finishes) so pass in null for the Cursor.
         mCursorAdapter = new InvCursorAdapter(this, null);
         invListView.setAdapter(mCursorAdapter);
 
@@ -65,56 +69,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         invListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                // Create new intent to go to {@link EditorActivity}
+
                 Intent intent = new Intent(MainActivity.this, EditorActivity.class);
 
-                // Form the content URI that represents the specific pet that was clicked on,
-                // by appending the "id" (passed as input to this method) onto the
-                // {@link PetEntry#CONTENT_URI}.
-                // For example, the URI would be "content://com.example.android.pets/pets/2"
-                // if the pet with ID 2 was clicked on.
                 Uri currentPetUri = ContentUris.withAppendedId(InvEntry.CONTENT_URI, id);
 
-                // Set the URI on the data field of the intent
                 intent.setData(currentPetUri);
 
-                // Launch the {@link EditorActivity} to display the data for the current pet.
                 startActivity(intent);
             }
         });
 
-        // Kick off the loader
         getLoaderManager().initLoader(INV_LOADER, null, this);
 
     }
-
-    /**
-     * Helper method to insert hardcoded prod data into the database. For debugging purposes only.
-     */
-//    private void insertProd() {
-//        // Create a ContentValues object where column names are the keys,
-//        ContentValues values = new ContentValues();
-//        values.put(InvEntry.COLUMN_PRODUCT_NAME, "Notebook");
-//        values.put(InvEntry.COLUMN_PRODUCT_AMOUNT, 3);
-//        values.put(InvEntry.COLUMN_PRODUCT_PRICE, 1000);
-//        values.put(InvEntry.COLUMN_PRODUCT_SOLD, 0);
-//        values.put(InvEntry.COLUMN_PRODUCT_PROVIDER, "DELL");
-//        values.put(InvEntry.COLUMN_PRODUCT_PROVIDER_EMAIL, "ifgandrade@gmail.com");
-//
-//        Bitmap bmap = BitmapFactory.decodeResource(getResources(),
-//                R.mipmap.ic_launcher_android);
-//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//        bmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-//        byte[] img = bos.toByteArray();
-//
-//        values.put(InvEntry.COLUMN_PRODUCT_IMAGE, img);
-//
-//        // Insert a new row for Toto into the provider using the ContentResolver.
-//        // Use the {@link PetEntry#CONTENT_URI} to indicate that we want to insert
-//        // into the pets database table.
-//        // Receive the new content URI that will allow us to access Toto's data in the future.
-//        Uri newUri = getContentResolver().insert(InvEntry.CONTENT_URI, values);
-//    }
 
     /**
      * Helper method to delete all pets in the database.
@@ -123,31 +91,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         int rowsDeleted = getContentResolver().delete(InvEntry.CONTENT_URI, null, null);
         Log.v("MainActivity", rowsDeleted + " rows deleted from inventory database");
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu options from the res/menu/menu_catalog.xml file.
-//        // This adds menu items to the app bar.
-//        getMenuInflater().inflate(R.menu.menu_catalog, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // User clicked on a menu option in the app bar overflow menu
-//        switch (item.getItemId()) {
-//            // Respond to a click on the "Insert dummy data" menu option
-//            case R.id.action_insert_dummy_data:
-//                insertProd();
-//                return true;
-//            // Respond to a click on the "Delete all entries" menu option
-//            case R.id.action_delete_all_entries:
-//                deleteAllProds();
-//                return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -182,4 +125,35 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // Callback called when the data needs to be deleted
         mCursorAdapter.swapCursor(null);
     }
+
+    public void sellProduct(int id, int sold , int amount){
+
+        sold += 1;
+
+        if (sold > amount) {
+            Toast.makeText(MainActivity.this, getString(R.string.enough), Toast.LENGTH_SHORT).show();
+        }else
+        {
+            ContentValues values = new ContentValues();
+            values.put(InvEntry.COLUMN_PRODUCT_SOLD, sold);
+
+            final Uri CONTENT_URI_ID = Uri.withAppendedPath(InvEntry.CONTENT_URI, "/" + id);
+
+            int rowsAffected = getContentResolver().update(CONTENT_URI_ID, values, null, null);
+
+            if (rowsAffected == 0) {
+                // If no rows were affected, then there was an error with the update.
+                Toast.makeText(this, getString(R.string.editor_update_prod_failed),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                // Otherwise, the update was successful and we can display a toast.
+                Toast.makeText(this, getString(R.string.editor_update_prod_successful),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+
+
 }

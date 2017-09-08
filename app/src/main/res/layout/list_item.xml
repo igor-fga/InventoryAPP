@@ -96,4 +96,13 @@
             android:textColor="#AEB6BD" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/btnSell"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SOLD"/>
+
+
 </LinearLayout>

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.ifgan.inventoryapp.data.InvContract.InvEntry;
+import com.example.ifgan.inventoryapp.data.InventoryContract.InvEntry;
 
 /**
  * Created by ifgan on 04/09/2017.
@@ -14,7 +14,9 @@ public class InvDbHelper extends SQLiteOpenHelper {
 
     public static final String LOG_TAG = InvDbHelper.class.getSimpleName();
 
-    /** Name of the database file */
+    /**
+     * Name of the database file
+     */
     private static final String DATABASE_NAME = "invent.db";
 
     /**
@@ -37,7 +39,7 @@ public class InvDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create a String that contains the SQL statement to create the inventory table
-        String SQL_CREATE_INVENTORY_TABLE =  "CREATE TABLE " + InvEntry.TABLE_NAME + " ("
+        String SQL_CREATE_INVENTORY_TABLE = "CREATE TABLE " + InvEntry.TABLE_NAME + " ("
                 + InvEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + InvEntry.COLUMN_PRODUCT_NAME + " TEXT NOT NULL, "
                 + InvEntry.COLUMN_PRODUCT_AMOUNT + " INTEGER NOT NULL DEFAULT 0, "

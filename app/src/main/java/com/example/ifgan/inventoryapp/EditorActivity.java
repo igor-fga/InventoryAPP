@@ -14,9 +14,7 @@ import android.net.Uri;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.InputFilter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,43 +22,60 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.ifgan.inventoryapp.data.InvContract.InvEntry;
+import com.example.ifgan.inventoryapp.data.InventoryContract.InvEntry;
 
 import java.io.ByteArrayOutputStream;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    /** Identifier for the product data loader */
+    /**
+     * Identifier for the product data loader
+     */
     private static final int EXISTING_INV_LOADER = 0;
     private static final int SELECT_PICTURE = 100;
 
     ImageView imgView;
 
-    /** Content URI for the existing product (null if it's a new product) */
+    /**
+     * Content URI for the existing product (null if it's a new product)
+     */
     private Uri mCurrentInvUri;
 
-    /** EditText field to enter the product's name */
+    /**
+     * EditText field to enter the product's name
+     */
     private EditText mNameEditText;
 
-    /** EditText field to enter the product's amount */
+    /**
+     * EditText field to enter the product's amount
+     */
     private EditText mAmountEditText;
 
-    /** EditText field to enter the product's price */
+    /**
+     * EditText field to enter the product's price
+     */
     private EditText mPriceEditText;
 
-    /** EditText field to enter the product's sold */
+    /**
+     * EditText field to enter the product's sold
+     */
     private EditText mSoldEditText;
 
-    /** EditText field to enter the product's provider */
+    /**
+     * EditText field to enter the product's provider
+     */
     private EditText mProviderEditText;
 
-    /** EditText field to enter the product's provider e-mail */
+    /**
+     * EditText field to enter the product's provider e-mail
+     */
     private EditText mProviderEmailEditText;
 
-    /** Boolean flag that keeps track of whether the prod has been edited (true) or not (false) */
+    /**
+     * Boolean flag that keeps track of whether the prod has been edited (true) or not (false)
+     */
     private boolean mProdHasChanged = false;
 
     /**
@@ -107,7 +122,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             getLoaderManager().initLoader(EXISTING_INV_LOADER, null, this);
         }
 
-        imgView = (ImageView)  findViewById(R.id.imgView);
+        imgView = (ImageView) findViewById(R.id.imgView);
 
         // Find all relevant views that we will need to read user input from
         mNameEditText = (EditText) findViewById(R.id.edit_prod_name);
@@ -151,27 +166,25 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     /**
      * Get user input from editor and save prod into database.
      */
-    private void saveProd() {
+    private boolean saveProd() {
         // Read from input fields
         // Use trim to eliminate leading or trailing white space
-        String nameString   = mNameEditText.getText().toString().trim();
+        String nameString = mNameEditText.getText().toString().trim();
         String amountString = mAmountEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
         String soldString = mSoldEditText.getText().toString().trim();
         String providerString = mProviderEditText.getText().toString().trim();
         String providerEmailString = mProviderEmailEditText.getText().toString().trim();
 
-        // Check if this is supposed to be a new pet
+        // Check if this is supposed to be a new prod
         // and check if all the fields in the editor are blank
-        if (mCurrentInvUri == null &&
-                TextUtils.isEmpty(nameString) && TextUtils.isEmpty(amountString) &&
-                TextUtils.isEmpty(priceString) && TextUtils.isEmpty(soldString) &&
-                TextUtils.isEmpty(providerString) && TextUtils.isEmpty(providerEmailString)) {
-            // Since no fields were modified, we can return early without creating a new prod.
-            // No need to create ContentValues and no need to do any ContentProvider operations.
+        if (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(amountString) ||
+                TextUtils.isEmpty(priceString) || TextUtils.isEmpty(soldString) ||
+                TextUtils.isEmpty(providerString) || TextUtils.isEmpty(providerEmailString)) {
+
             Toast.makeText(this, getString(R.string.empty),
                     Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
 
         // Create a ContentValues object where column names are the keys,
@@ -199,7 +212,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         byte[] img = bos.toByteArray();
 
         values.put(InvEntry.COLUMN_PRODUCT_IMAGE, img);
-
 
 
         // Determine if this is a new or existing pet by checking if mCurrentPetUri is null or not
@@ -236,6 +248,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                         Toast.LENGTH_SHORT).show();
             }
         }
+
+        return true;
     }
 
     @Override
@@ -272,9 +286,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
                 // Save pet to database
-                saveProd();
-                // Exit activity
-                finish();
+                if (saveProd()) {
+                    finish();
+                }
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
@@ -344,8 +358,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Show dialog that there are unsaved changes
         showUnsavedChangesDialog(discardButtonClickListener);
     }
-
-
 
 
     @Override
@@ -481,7 +493,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         alertDialog.show();
     }
 
-    private void showSellConfirmationDialog(){
+    private void showSellConfirmationDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
@@ -495,12 +507,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             public void onClick(DialogInterface dialog, int whichButton) {
                 mSoldEditText = (EditText) findViewById(R.id.edit_prod_sold);
                 int amount = Integer.parseInt(mAmountEditText.getText().toString());
-                int sold =  Integer.parseInt(edt.getText().toString());
+                int sold = Integer.parseInt(edt.getText().toString());
 
-                if (sold > amount)
-                {
+                if (sold > amount) {
                     Toast.makeText(EditorActivity.this, getString(R.string.enough), Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
 
                     mSoldEditText.setText(edt.getText().toString());
                 }
@@ -561,7 +572,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         emailIntent.setData(Uri.parse("mailto:"));
         emailIntent.setType("text/plain");
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {emailString});
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{emailString});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Buy more " + editNameText.getText().toString());
         emailIntent.putExtra(Intent.EXTRA_TEXT, "I want more " + editNameText.getText().toString());
 
@@ -572,7 +583,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             Toast.makeText(EditorActivity.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
         }
     }
-
 
 
 }

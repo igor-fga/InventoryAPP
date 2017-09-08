@@ -7,25 +7,37 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.example.ifgan.inventoryapp.data.InvContract.InvEntry;
+import com.example.ifgan.inventoryapp.data.InventoryContract.InvEntry;
 
 /**
  * Created by ifgan on 04/09/2017.
  */
 
-public class InvProvider extends ContentProvider {
+public class InventoryProvider extends ContentProvider {
 
-    /** Tag for the log messages */
-    public static final String LOG_TAG = InvProvider.class.getSimpleName();
+    /**
+     * The "Content authority" is a name for the entire content provider, similar to the
+     * relationship between a domain name and its website.  A convenient string to use for the
+     * content authority is the package name for the app, which is guaranteed to be unique on the
+     * device.
+     */
+    public static final String CONTENT_AUTHORITY = "com.example.ifgan.inventoryapp";
 
-    /** URI matcher code for the content URI for the inventory table */
+    /**
+     * Tag for the log messages
+     */
+    public static final String LOG_TAG = InventoryProvider.class.getSimpleName();
+
+    /**
+     * URI matcher code for the content URI for the inventory table
+     */
     private static final int PRODUCTS = 100;
 
-    /** URI matcher code for the content URI for a single product in the inventory table */
+    /**
+     * URI matcher code for the content URI for a single product in the inventory table
+     */
     private static final int PRODUCT_ID = 101;
 
     /**
@@ -44,7 +56,7 @@ public class InvProvider extends ContentProvider {
         // The content URI of the form "content://com.example.android.pets/pets" will map to the
         // integer code {@link #PETS}. This URI is used to provide access to MULTIPLE rows
         // of the pets table.
-        sUriMatcher.addURI(InvContract.CONTENT_AUTHORITY, InvContract.PATH_INVENTORY, PRODUCTS);
+        sUriMatcher.addURI(CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORY, PRODUCTS);
 
         // The content URI of the form "content://com.example.ifgan.inventoryapp/pets/#" will map to the
         // integer code {@link #PET_ID}. This URI is used to provide access to ONE single row
@@ -53,10 +65,12 @@ public class InvProvider extends ContentProvider {
         // In this case, the "#" wildcard is used where "#" can be substituted for an integer.
         // For example, "content://com.example.ifgan.inventoryapp/inventory/3" matches, but
         // "content://com.example.android.pets/pets" (without a number at the end) doesn't match.
-        sUriMatcher.addURI(InvContract.CONTENT_AUTHORITY, InvContract.PATH_INVENTORY + "/#", PRODUCT_ID);
+        sUriMatcher.addURI(CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORY + "/#", PRODUCT_ID);
     }
 
-    /** Database helper object */
+    /**
+     * Database helper object
+     */
     private InvDbHelper mDbHelper;
 
 
@@ -95,7 +109,7 @@ public class InvProvider extends ContentProvider {
                 // arguments that will fill in the "?". Since we have 1 question mark in the
                 // selection, we have 1 String in the selection arguments' String array.
                 selection = InvEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
                 // This will perform a query on the pets table where the _id equals 3 to return a
                 // Cursor containing that row of the table.
@@ -210,7 +224,7 @@ public class InvProvider extends ContentProvider {
             case PRODUCT_ID:
                 // Delete a single row given by the ID in the URI
                 selection = InvEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 rowsDeleted = database.delete(InvEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
@@ -239,7 +253,7 @@ public class InvProvider extends ContentProvider {
                 // so we know which row to update. Selection will be "_id=?" and selection
                 // arguments will be a String array containing the actual ID.
                 selection = InvEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updatePet(uri, contentValues, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("Update is not supported for " + uri);

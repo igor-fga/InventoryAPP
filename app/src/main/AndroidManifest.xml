@@ -18,7 +18,7 @@
         <activity android:name=".EditorActivity"></activity>
 
         <provider
-            android:name=".data.InvProvider"
+            android:name=".data.InventoryProvider"
             android:authorities="com.example.ifgan.inventoryapp"
             android:exported="false" />
     </application>

@@ -20,7 +20,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -114,7 +116,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Otherwise this is an existing pet, so change app bar to say "Edit Product"
             setTitle(getString(R.string.editor_activity_title_edit_prod));
             mSoldEditText = (EditText) findViewById(R.id.edit_prod_sold);
+            mAmountEditText = (EditText) findViewById(R.id.edit_prod_amount);
             mSoldEditText.setEnabled(false);
+            mAmountEditText.setEnabled(false);
 
 
             // Initialize a loader to read the pet data from the database
@@ -141,6 +145,55 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSoldEditText.setOnTouchListener(mTouchListener);
         mProviderEditText.setOnTouchListener(mTouchListener);
         mProviderEmailEditText.setOnTouchListener(mTouchListener);
+
+        ImageButton btnLess = (ImageButton) findViewById(R.id.lessAmount);
+        ImageButton btnMore = (ImageButton) findViewById(R.id.moreAmount);
+
+        btnLess.setOnClickListener(new View.OnClickListener(){
+
+            public void onClick(View v) {
+                lessAmount();
+            }
+        });
+
+        btnMore.setOnClickListener(new View.OnClickListener(){
+
+            public void onClick(View v) {
+                MoreAmount();
+            }
+        });
+
+    }
+
+    public void lessAmount(){
+
+        mAmountEditText = (EditText) findViewById(R.id.edit_prod_amount);
+        String amountString = mAmountEditText.getText().toString().trim();
+        int amount = Integer.parseInt(amountString);
+
+        amount -= 1;
+
+        if (amount < 0)
+        {
+            Toast.makeText(this, "The value can't be negative",
+                    Toast.LENGTH_SHORT).show();
+        }
+        else{
+            mAmountEditText.setText(String.valueOf(amount));
+        }
+
+    }
+
+    public void MoreAmount(){
+
+        mAmountEditText = (EditText) findViewById(R.id.edit_prod_amount);
+        String amountString = mAmountEditText.getText().toString().trim();
+        int amount = Integer.parseInt(amountString);
+
+        amount += 1;
+
+        mAmountEditText.setText(String.valueOf(amount));
+
     }
 
     public void openImageChooser() {
